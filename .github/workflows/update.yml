@@ -1,0 +1,31 @@
+name: Update VPN Gate Mirror
+
+on:
+  schedule:
+    - cron: '15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  update-mirrors:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sync VPN Gate Directory
+        run: python sync.py
+
+      - name: Commit and Push if updated
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add servers.csv
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update VPN Gate mirror directory [skip ci]" && git push)
