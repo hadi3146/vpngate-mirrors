@@ -29,3 +29,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git add servers.csv
           git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update VPN Gate mirror directory [skip ci]" && git push)
+
